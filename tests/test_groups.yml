@@ -196,6 +196,7 @@ pr_gate:
     - tests/unit/recommenders/evaluation/test_python_evaluation.py::test_user_item_serendipity_item_feature_vector
     - tests/unit/recommenders/evaluation/test_python_evaluation.py::test_user_serendipity_item_feature_vector
     - tests/unit/recommenders/evaluation/test_python_evaluation.py::test_serendipity_item_feature_vector
+    - tests/unit/recommenders/models/test_tfidf_tokenization_index.py
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_init
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_clean_dataframe
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_fit

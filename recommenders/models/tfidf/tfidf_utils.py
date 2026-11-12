@@ -152,10 +152,10 @@ class TfidfRecommender:
             # Load pre-trained model tokenizer (vocabulary)
             tokenizer = BertTokenizer.from_pretrained(bert_method)
 
-            # Loop through each item
-            vectors_tokenized = vectors.copy()
-            for i in range(0, len(vectors)):
-                vectors_tokenized[i] = " ".join(tokenizer.tokenize(vectors[i]))
+            # Tokenize by row while preserving arbitrary or duplicate index labels.
+            vectors_tokenized = vectors.map(
+                lambda text: " ".join(tokenizer.tokenize(text))
+            )
 
         elif self.tokenization_method == "nltk":
             # NLTK Stemming
