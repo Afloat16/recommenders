@@ -215,7 +215,10 @@ def get_top_k_scored_items(scores, top_k, sort_top_k=False):
     top_scores = scores[test_user_idx, top_items]
 
     if sort_top_k:
-        sort_ind = np.argsort(-top_scores)
+        # Complement integral scores to reverse their order without overflowing
+        # unsigned zeros or the minimum signed integer. Keep floating NaN ordering.
+        sort_values = ~top_scores if top_scores.dtype.kind in "iub" else -top_scores
+        sort_ind = np.argsort(sort_values)
         top_items = top_items[test_user_idx, sort_ind]
         top_scores = top_scores[test_user_idx, sort_ind]
 

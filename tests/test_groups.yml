@@ -274,6 +274,7 @@ pr_gate:
     - tests/unit/recommenders/utils/test_python_utils.py::test_get_top_k_scored_items_invalid_k
     - tests/unit/recommenders/utils/test_python_utils.py::test_get_top_k_scored_items_positive_k
     - tests/unit/recommenders/utils/test_python_utils.py::test_get_top_k_scored_items_empty_axes
+    - tests/unit/recommenders/utils/test_python_utils.py::test_get_top_k_scored_items_integral_order
     - tests/unit/recommenders/utils/test_python_utils.py::test_binarize
     - tests/unit/recommenders/utils/test_python_utils.py::test_rescale
     - tests/unit/recommenders/utils/test_timer.py::test_no_time
