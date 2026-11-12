@@ -220,6 +220,7 @@ pr_gate:
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_init
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_fit
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_predict
+    - tests/unit/recommenders/models/test_sasrec_resplit.py
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_predict_all_items
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_sar_item_similarity
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_user_affinity
