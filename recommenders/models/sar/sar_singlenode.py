@@ -19,7 +19,6 @@ from recommenders.utils.python_utils import (
 )
 from recommenders.utils import constants
 
-
 SIM_COOCCUR = "cooccurrence"
 SIM_COSINE = "cosine"
 SIM_INCLUSION_INDEX = "inclusion index"
@@ -562,13 +561,11 @@ class SARSingleNode:
         """
 
         test_scores = self.score(test)
+        # score() returns rows in first-occurrence order of the queried users,
+        # which may differ from the training indices or contain only a subset.
+        user2row = {user: row for row, user in enumerate(test[self.col_user].unique())}
         user_ids = np.asarray(
-            list(
-                map(
-                    lambda user: self.user2index.get(user, np.nan),
-                    test[self.col_user].values,
-                )
-            )
+            [user2row[user] for user in test[self.col_user].values], dtype=np.intp
         )
 
         # create mapping of new items to zeros
@@ -585,7 +582,9 @@ class SARSingleNode:
             logger.warning(
                 "Items found in test not seen during training, new items will have score of 0"
             )
-            test_scores = np.append(test_scores, np.zeros((self.n_users, 1)), axis=1)
+            test_scores = np.append(
+                test_scores, np.zeros((test_scores.shape[0], 1)), axis=1
+            )
             item_ids[nans] = self.n_items
             item_ids = item_ids.astype("int64")
 
