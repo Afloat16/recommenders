@@ -125,6 +125,7 @@ pr_gate:
   # and the time for setting up the environment is 178.3s,
   # there is no need to separate these tests, otherwise, there will be extra 178.3s * 4 time used for setting up another 4 environments.
   group_cpu_spark:
+    - tests/unit/recommenders/models/test_sasrec_sampler.py
   # group_cpu_001:
     - tests/data_validation/recommenders/datasets/test_movielens.py::test_mock_movielens_schema__has_default_col_names
     - tests/data_validation/recommenders/datasets/test_movielens.py::test_mock_movielens_schema__get_df_remove_default_col__return_success

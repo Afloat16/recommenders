@@ -14,8 +14,32 @@ def random_neq(left, right, s):
     return t
 
 
+def _valid_users(user_train, usernum, itemnum):
+    """Find users that can supply both a sequence target and an unseen item."""
+    users = [
+        user
+        for user, history in user_train.items()
+        if 1 <= user <= usernum
+        and len(history) > 1
+        and len({item for item in history if 1 <= item <= itemnum}) < itemnum
+    ]
+    if not users:
+        raise ValueError(
+            "SASRec sampling requires a user with at least two interactions "
+            "and an unseen item for negative sampling"
+        )
+    return users
+
+
 def sample_function(
-    user_train, usernum, itemnum, batch_size, maxlen, result_queue, seed
+    user_train,
+    usernum,
+    itemnum,
+    batch_size,
+    maxlen,
+    result_queue,
+    seed,
+    valid_users=None,
 ):
     """Batch sampler that creates a sequence of negative items based on the
     original sequence of items (positive) that the user has interacted with.
@@ -28,13 +52,15 @@ def sample_function(
         maxlen (int): maximum input sequence length
         result_queue (multiprocessing.Queue): queue for storing sample results
         seed (int): seed for random generator
+        valid_users (list | None): eligible users, computed when not supplied
     """
+
+    if valid_users is None:
+        valid_users = _valid_users(user_train, usernum, itemnum)
 
     def sample():
 
-        user = np.random.randint(1, usernum + 1)
-        while len(user_train[user]) <= 1:
-            user = np.random.randint(1, usernum + 1)
+        user = valid_users[np.random.randint(len(valid_users))]
 
         seq = np.zeros([maxlen], dtype=np.int32)
         pos = np.zeros([maxlen], dtype=np.int32)
@@ -67,6 +93,9 @@ def sample_function(
 class WarpSampler(object):
     """Sampler object that creates an iterator for feeding batch data while training.
 
+    Users without a sequence target or an unseen negative item are skipped.
+    Construction raises ValueError if no user can produce a training pair.
+
     Attributes:
         User: dict, all the users (keys) with items as values
         usernum: integer, total number of users
@@ -77,6 +106,7 @@ class WarpSampler(object):
     """
 
     def __init__(self, User, usernum, itemnum, batch_size=64, maxlen=10, n_workers=1):
+        valid_users = _valid_users(User, usernum, itemnum)
         self.result_queue = Queue(maxsize=n_workers * 10)
         self.processors = []
         for i in range(n_workers):
@@ -91,6 +121,7 @@ class WarpSampler(object):
                         maxlen,
                         self.result_queue,
                         np.random.randint(2e9),
+                        valid_users,
                     ),
                 )
             )
