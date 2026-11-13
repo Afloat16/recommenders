@@ -100,9 +100,9 @@ class RLRMCdataset(object):
         d = len(user_idx)  # number of rows
         T = len(item_idx)  # number of columns
 
-        rows_train = df_train["userID"].values
-        cols_train = df_train["itemID"].values
-        entries_omega = df_train["rating"].values
+        rows_train = df_train[self.col_user].values
+        cols_train = df_train[self.col_item].values
+        entries_omega = df_train[self.col_rating].values
         if mean_center:
             train_mean = np.mean(entries_omega)
         else:
@@ -116,9 +116,9 @@ class RLRMCdataset(object):
 
         if validation is not None:
             df_validation = self._reindex(validation)
-            rows_validation = df_validation["userID"].values
-            cols_validation = df_validation["itemID"].values
-            entries_validation = df_validation["rating"].values - train_mean
+            rows_validation = df_validation[self.col_user].values
+            cols_validation = df_validation[self.col_item].values
+            entries_validation = df_validation[self.col_rating].values - train_mean
             self.validation = csr_matrix(
                 (entries_validation.T.ravel(), (rows_validation, cols_validation)),
                 shape=(d, T),
