@@ -508,3 +508,43 @@ def test_user_frequencies(header):
     # run this method once so that user frequencies are calculated
     model.get_popularity_based_topk(items=False)
     assert model.user_frequencies[0] == 2
+
+
+@pytest.mark.parametrize("similarity_type", ["cooccurrence", "jaccard"])
+@pytest.mark.parametrize(
+    "query_users,query_items",
+    [
+        (["third", "third"], ["a", "c"]),
+        (["third", "first", "second", "third"], ["a", "b", "c", "c"]),
+        (["second", "third", "second"], ["unknown", "a", "c"]),
+    ],
+)
+def test_predict_uses_query_user_order(similarity_type, query_users, query_items):
+    train = pd.DataFrame(
+        {
+            "userID": ["first", "first", "second", "second", "third", "third"],
+            "itemID": ["a", "b", "b", "c", "a", "c"],
+            "rating": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        }
+    )
+    model = SAR(similarity_type=similarity_type)
+    model.fit(train)
+    query = pd.DataFrame(
+        {"userID": query_users, "itemID": query_items}, index=[7] * len(query_users)
+    )
+    original = query.copy(deep=True)
+    full_scores = model.score(pd.DataFrame({"userID": ["first", "second", "third"]}))
+    expected = [
+        (
+            full_scores[model.user2index[user], model.item2index[item]]
+            if item in model.item2index
+            else 0.0
+        )
+        for user, item in zip(query_users, query_items)
+    ]
+
+    result = model.predict(query)
+    assert result["userID"].tolist() == query_users
+    assert result["itemID"].tolist() == query_items
+    np.testing.assert_allclose(result["prediction"], expected)
+    assert_frame_equal(query, original)
