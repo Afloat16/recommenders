@@ -820,3 +820,36 @@ def test_serendipity_item_feature_vector(diversity_data):
         col_sim="sim",
         col_relevance="Relevance",
     ) == pytest.approx(0.4028, TOL)
+
+
+@pytest.mark.parametrize(
+    "metric", [user_diversity, diversity, user_item_serendipity, user_serendipity, serendipity]
+)
+@pytest.mark.parametrize(
+    "feature_column, similarity_column",
+    [("vectors", "sim"), ("features", "cosine"), ("vectors", "cosine")],
+)
+def test_feature_metrics_preserve_custom_columns(
+    diversity_data, metric, feature_column, similarity_column
+):
+    train_df, reco_df, item_feature_df = diversity_data
+    options = {
+        "train_df": train_df,
+        "reco_df": reco_df,
+        "item_sim_measure": "item_feature_vector",
+        "col_user": "UserId",
+        "col_item": "ItemId",
+        "col_relevance": "Relevance",
+    }
+    expected = metric(item_feature_df=item_feature_df, **options)
+    actual = metric(
+        item_feature_df=item_feature_df.rename(columns={"features": feature_column}),
+        col_item_features=feature_column,
+        col_sim=similarity_column,
+        **options,
+    )
+
+    if isinstance(expected, pd.DataFrame):
+        assert_frame_equal(actual, expected)
+    else:
+        assert actual == pytest.approx(expected)

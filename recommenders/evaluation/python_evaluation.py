@@ -1016,6 +1016,7 @@ def _check_column_dtypes_diversity_serendipity(func):
             reco_df=reco_df,
             item_feature_df=item_feature_df,
             item_sim_measure=item_sim_measure,
+            col_item_features=col_item_features,
             col_user=col_user,
             col_item=col_item,
             col_sim=col_sim,
@@ -1131,7 +1132,7 @@ def _get_cosine_similarity(
     elif item_sim_measure == "item_feature_vector":
         # calculdf_cosine_similarity = ate item-item similarity based on item feature vectors
         df_cosine_similarity = _get_item_feature_similarity(
-            item_feature_df, col_item_features, col_user, col_item
+            item_feature_df, col_item_features, col_user, col_item, col_sim
         )
     else:
         raise Exception(
