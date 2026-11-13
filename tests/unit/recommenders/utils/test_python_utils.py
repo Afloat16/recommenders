@@ -148,6 +148,36 @@ def test_get_top_k_scored_items_empty_axes(shape, sort_top_k):
     assert values.dtype == scores.dtype
 
 
+@pytest.mark.parametrize(
+    "dtype", [np.int8, np.int32, np.int64, np.uint8, np.uint32, np.uint64, np.bool_]
+)
+@pytest.mark.parametrize("sparse_input", [False, True])
+@pytest.mark.parametrize("top_k", [1, 3, 5])
+def test_get_top_k_scored_items_integral_order(dtype, sparse_input, top_k):
+    if dtype is np.bool_:
+        row = [False, True, False, True, False]
+    else:
+        bounds = np.iinfo(dtype)
+        row = [bounds.min, bounds.min + 1, bounds.max - 1, bounds.max, 0]
+    scores = np.array([row, row[::-1]], dtype=dtype)
+    original = scores.copy()
+    source = sparse.csr_matrix(scores) if sparse_input else scores
+
+    indices, values = get_top_k_scored_items(source, top_k, sort_top_k=True)
+
+    # Python integers retain the full range, including uint64 and signed minima.
+    expected = np.array(
+        [sorted((int(value) for value in row), reverse=True)[:top_k] for row in scores],
+        dtype=dtype,
+    )
+    np.testing.assert_array_equal(values, expected)
+    np.testing.assert_array_equal(values, np.take_along_axis(scores, indices, axis=1))
+    np.testing.assert_array_equal(
+        source.toarray() if sparse_input else source, original
+    )
+    assert values.dtype == scores.dtype
+
+
 def test_binarize():
     data = np.array([[2, 7, 0], [8, 2, 9], [9, 9, 4]])
     threshold = 3
