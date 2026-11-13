@@ -42,7 +42,9 @@ class SASRecDataSet:
             elif ncols == 2:
                 self.with_time = False
             else:
-                raise ValueError(f"3 or 2 columns must be in dataset. Given {ncols} columns")
+                raise ValueError(
+                    f"3 or 2 columns must be in dataset. Given {ncols} columns"
+                )
 
     def split(self, valid_size=1, test_size=1, min_interactions=3, verbose=False):
         """
@@ -71,7 +73,9 @@ class SASRecDataSet:
             ValueError: If filename is not set or min_interactions is too small.
         """
         if not self.filename:
-            raise ValueError("Filename is required. Set it in __init__ or pass as kwarg.")
+            raise ValueError(
+                "Filename is required. Set it in __init__ or pass as kwarg."
+            )
 
         # Validate parameters
         required_min = valid_size + test_size + 1
@@ -80,6 +84,16 @@ class SASRecDataSet:
                 f"min_interactions ({min_interactions}) must be >= valid_size + test_size + 1 "
                 f"({required_min}) to have at least 1 training item."
             )
+
+        # Each partition reloads the source file. Start fresh so repeated splits
+        # neither duplicate histories nor mix old item IDs with timestamp pairs.
+        self.usernum = 0
+        self.itemnum = 0
+        self.User = defaultdict(list)
+        self.Items = set()
+        self.user_train = {}
+        self.user_valid = {}
+        self.user_test = {}
 
         if self.with_time:
             self._data_partition_with_time(valid_size, test_size, min_interactions)
@@ -132,8 +146,12 @@ class SASRecDataSet:
             else:
                 split_point = valid_size + test_size
                 self.user_train[user] = self.User[user][:-split_point]
-                self.user_valid[user] = self.User[user][-split_point:-test_size] if valid_size > 0 else []
-                self.user_test[user] = self.User[user][-test_size:] if test_size > 0 else []
+                self.user_valid[user] = (
+                    self.User[user][-split_point:-test_size] if valid_size > 0 else []
+                )
+                self.user_test[user] = (
+                    self.User[user][-test_size:] if test_size > 0 else []
+                )
 
     def _data_partition_with_time(self, valid_size, test_size, min_interactions):
         """Internal method to partition data with timestamps (sorts by time first)."""
@@ -163,5 +181,9 @@ class SASRecDataSet:
             else:
                 split_point = valid_size + test_size
                 self.user_train[user] = self.User[user][:-split_point]
-                self.user_valid[user] = self.User[user][-split_point:-test_size] if valid_size > 0 else []
-                self.user_test[user] = self.User[user][-test_size:] if test_size > 0 else []
+                self.user_valid[user] = (
+                    self.User[user][-split_point:-test_size] if valid_size > 0 else []
+                )
+                self.user_test[user] = (
+                    self.User[user][-test_size:] if test_size > 0 else []
+                )
