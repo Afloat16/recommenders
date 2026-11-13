@@ -14,6 +14,7 @@ from recommenders.datasets.pandas_df_utils import (
     has_columns,
     lru_cache_df,
     negative_feedback_sampler,
+    user_item_pairs,
 )
 
 
@@ -157,6 +158,57 @@ def test_filter_by():
     assert len(filtered_df) == len(user_df) - 2
     # Check filtered out record
     assert len(filtered_df.loc[(user_df["user_id"] == 1)]) == 0
+
+
+@pytest.mark.parametrize("key_owner", ["user", "item", "both"])
+@pytest.mark.parametrize("shuffle", [False, True])
+def test_user_item_pairs_preserves_key_features(key_owner, shuffle):
+    users = pd.DataFrame({"userID": [10, 20]})
+    items = pd.DataFrame({"itemID": [1, 2, 3]})
+    if key_owner in ("user", "both"):
+        users["key"] = ["a", "b"]
+    if key_owner in ("item", "both"):
+        items["key"] = ["x", "y", "z"]
+    original_users = users.copy(deep=True)
+    original_items = items.copy(deep=True)
+
+    actual = user_item_pairs(users, items, shuffle=shuffle, seed=5)
+
+    pd.testing.assert_frame_equal(users, original_users)
+    pd.testing.assert_frame_equal(items, original_items)
+    actual = actual.sort_values(["userID", "itemID"]).reset_index(drop=True)
+    assert actual["userID"].tolist() == [10, 10, 10, 20, 20, 20]
+    assert actual["itemID"].tolist() == [1, 2, 3, 1, 2, 3]
+    if key_owner in ("user", "both"):
+        column = "key_x" if key_owner == "both" else "key"
+        assert actual[column].tolist() == ["a", "a", "a", "b", "b", "b"]
+    if key_owner in ("item", "both"):
+        column = "key_y" if key_owner == "both" else "key"
+        assert actual[column].tolist() == ["x", "y", "z", "x", "y", "z"]
+
+
+@pytest.mark.parametrize("user_col,item_col", [("key", "itemID"), ("userID", "key")])
+def test_user_item_pairs_allows_key_identifier_and_filter(user_col, item_col):
+    users = pd.DataFrame({user_col: [10, 20]})
+    items = pd.DataFrame({item_col: [1, 2]})
+    excluded = pd.DataFrame({user_col: [10], item_col: [2]})
+
+    actual = user_item_pairs(
+        users,
+        items,
+        user_col=user_col,
+        item_col=item_col,
+        user_item_filter_df=excluded,
+        shuffle=False,
+    )
+
+    assert list(actual[[user_col, item_col]].itertuples(index=False, name=None)) == [
+        (10, 1),
+        (20, 1),
+        (20, 2),
+    ]
+    assert users[user_col].tolist() == [10, 20]
+    assert items[item_col].tolist() == [1, 2]
 
 
 def test_libffm_transform_does_not_modify_input():

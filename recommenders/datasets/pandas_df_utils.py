@@ -42,13 +42,7 @@ def user_item_pairs(
     """
 
     # Get all user-item pairs
-    user_df["key"] = 1
-    item_df["key"] = 1
-    users_items = user_df.merge(item_df, on="key")
-
-    user_df.drop("key", axis=1, inplace=True)
-    item_df.drop("key", axis=1, inplace=True)
-    users_items.drop("key", axis=1, inplace=True)
+    users_items = user_df.merge(item_df, how="cross")
 
     # Filter
     if user_item_filter_df is not None:
