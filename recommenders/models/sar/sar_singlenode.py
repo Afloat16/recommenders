@@ -372,7 +372,12 @@ class SARSingleNode:
         # remove items in the train set so recommended items are always novel
         if remove_seen:
             logger.info("Removing seen items")
-            test_scores += self.user_affinity[user_ids, :] * -np.inf
+            # Mask stored observations, regardless of the sign of their rating.
+            # COO coordinates also retain explicit zeros and cancelled affinities.
+            seen = self.user_affinity[user_ids, :].tocoo()
+            if np.issubdtype(test_scores.dtype, np.integer):
+                test_scores = test_scores.astype(float)
+            test_scores[seen.row, seen.col] = -np.inf
 
         return test_scores
 
