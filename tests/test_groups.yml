@@ -67,6 +67,7 @@ nightly:
     - tests/smoke/examples/test_notebooks_gpu.py::test_wide_deep_smoke
     - tests/unit/recommenders/models/test_embdotbias_model.py
     - tests/unit/recommenders/models/test_embdotbias_utils.py
+    - tests/unit/recommenders/models/test_embdotbias_epoch_losses.py
     - tests/smoke/examples/test_notebooks_gpu.py::test_embdotbias_smoke
     - tests/functional/examples/test_notebooks_gpu.py::test_embdotbias_functional
 
@@ -398,6 +399,7 @@ pr_gate:
     - tests/unit/recommenders/models/test_ncf_singlenode.py::test_neumf_save_load
     - tests/unit/recommenders/models/test_ncf_singlenode.py::test_regular_save_load
     - tests/unit/recommenders/models/test_ncf_singlenode.py::test_predict
+    - tests/unit/recommenders/models/test_embdotbias_epoch_losses.py
     - tests/unit/recommenders/models/test_wide_deep_utils.py::test_wide_model
     - tests/unit/recommenders/models/test_wide_deep_utils.py::test_deep_model
     - tests/unit/recommenders/models/test_wide_deep_utils.py::test_wide_deep_model

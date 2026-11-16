@@ -51,6 +51,7 @@ class Trainer:
         """
         self.model.train()
         total_loss = 0
+        total_ratings = 0
         for batch in train_dl:
             users_items, ratings = batch
             users_items = users_items.to(self.device)
@@ -62,34 +63,36 @@ class Trainer:
             loss.backward()
             self.optimizer.step()
 
-            total_loss += loss.item()
-        return total_loss / len(train_dl)
+            total_loss += loss.item() * ratings.numel()
+            total_ratings += ratings.numel()
+        return total_loss / total_ratings
 
     def validate(self, valid_dl):
         """
         Validates the model on the validation set.
 
         Args:
-            valid_dl: The validation data loader.
+            valid_dl: The validation data loader, or None when no split is available.
 
         Returns:
             float or None: The average validation loss, or None if the validation data loader is empty.
         """
+        if valid_dl is None:
+            return None
         self.model.eval()
         total_loss = 0
-        try:
-            with torch.no_grad():
-                for batch in valid_dl:
-                    users_items, ratings = batch
-                    users_items = users_items.to(self.device)
-                    ratings = ratings.to(self.device)
+        total_ratings = 0
+        with torch.no_grad():
+            for batch in valid_dl:
+                users_items, ratings = batch
+                users_items = users_items.to(self.device)
+                ratings = ratings.to(self.device)
 
-                    predictions = self.model(users_items)
-                    loss = self.loss_fn(predictions.view(-1), ratings.view(-1))
-                    total_loss += loss.item()
-            return total_loss / len(valid_dl)
-        except ZeroDivisionError:
-            return None
+                predictions = self.model(users_items)
+                loss = self.loss_fn(predictions.view(-1), ratings.view(-1))
+                total_loss += loss.item() * ratings.numel()
+                total_ratings += ratings.numel()
+        return total_loss / total_ratings if total_ratings else None
 
     def fit(self, train_dl, valid_dl, n_epochs):
         """
