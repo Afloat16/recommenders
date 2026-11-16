@@ -231,7 +231,6 @@ pr_gate:
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_dataset_with_duplicates
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_get_topk_most_similar_users
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_item_frequencies
-    - tests/unit/recommenders/models/test_rbm_inference_memory.py
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_user_frequencies
     # - tests/unit/recommenders/models/test_surprise_utils.py::test_predict  # Put back in core deps when #2224 is fixed
     # - tests/unit/recommenders/models/test_surprise_utils.py::test_recommend_k_items  # Put back in core deps when #2224 is fixed
@@ -266,6 +265,7 @@ pr_gate:
     - tests/unit/recommenders/tuning/test_nni_utils.py::test_get_trials
     - tests/unit/recommenders/tuning/test_sweep.py::test_param_sweep
     - tests/unit/recommenders/utils/test_general_utils.py::test_invert_dictionary
+    - tests/unit/recommenders/models/test_rbm_inference_memory.py
     - tests/unit/recommenders/utils/test_general_utils.py::test_get_number_processors
     - tests/unit/recommenders/utils/test_plot.py::test_line_graph
     - tests/unit/recommenders/utils/test_python_utils.py::test_python_jaccard
