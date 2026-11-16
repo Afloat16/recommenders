@@ -227,9 +227,6 @@ pr_gate:
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_get_item_based_topk
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_get_popularity_based_topk
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_get_normalized_scores
-    - tests/unit/recommenders/utils/test_constant_rescale.py::test_sar_constant_rating_normalization_keeps_recommendations
-    - tests/unit/recommenders/utils/test_constant_rescale.py::test_rescale_constant_input_maps_to_lower_bound
-    - tests/unit/recommenders/utils/test_constant_rescale.py::test_rescale_broadcast_bounds_handle_constant_rows
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_match_similarity_type_from_json_file
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_dataset_with_duplicates
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_get_topk_most_similar_users
@@ -279,6 +276,9 @@ pr_gate:
     - tests/unit/recommenders/utils/test_python_utils.py::test_get_top_k_scored_items_empty_axes
     - tests/unit/recommenders/utils/test_python_utils.py::test_binarize
     - tests/unit/recommenders/utils/test_python_utils.py::test_rescale
+    - tests/unit/recommenders/utils/test_constant_rescale.py::test_rescale_constant_input_maps_to_lower_bound
+    - tests/unit/recommenders/utils/test_constant_rescale.py::test_rescale_broadcast_bounds_handle_constant_rows
+    - tests/unit/recommenders/utils/test_constant_rescale.py::test_sar_constant_rating_normalization_keeps_recommendations
     - tests/unit/recommenders/utils/test_timer.py::test_no_time
     - tests/unit/recommenders/utils/test_timer.py::test_stop_before_start
     - tests/unit/recommenders/utils/test_timer.py::test_interval_before_stop
