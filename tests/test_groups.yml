@@ -252,6 +252,7 @@ pr_gate:
     - tests/unit/recommenders/models/test_vowpal_wabbit.py::test_save_and_load
     - tests/unit/recommenders/models/test_vowpal_wabbit.py::test_save_outlives_the_model
     - tests/unit/recommenders/tuning/test_ncf_utils.py::test_compute_test_results__return_success
+    - tests/unit/recommenders/models/test_ncf_index_memory.py
     - tests/unit/recommenders/tuning/test_nni_utils.py::test_get_experiment_status
     - tests/unit/recommenders/tuning/test_nni_utils.py::test_check_experiment_status_done
     - tests/unit/recommenders/tuning/test_nni_utils.py::test_check_experiment_status_tuner_no_more_trial
@@ -387,6 +388,7 @@ pr_gate:
     - tests/unit/recommenders/models/test_rbm.py::test_resume_training_keeps_visible_bias
     - tests/unit/recommenders/models/test_rbm.py::test_fit_raises_when_minibatch_larger_than_train_set
     - tests/unit/recommenders/models/test_ncf_dataset.py::test_datafile_init
+    - tests/unit/recommenders/models/test_ncf_index_memory.py
     - tests/unit/recommenders/models/test_ncf_dataset.py::test_train_loader
     - tests/unit/recommenders/models/test_ncf_dataset.py::test_test_loader
     - tests/unit/recommenders/models/test_ncf_dataset.py::test_datafile_init_unsorted

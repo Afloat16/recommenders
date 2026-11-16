@@ -144,7 +144,6 @@ class DataFile:
         # and ensure file is sorted by user (and batch index if test set)
         logger.info("Indexing {} ...".format(self.filename))
         with self:
-            user_items = []
             self.item2id, self.user2id = OrderedDict(), OrderedDict()
             batch_index = 0
             for _ in self:
@@ -156,7 +155,6 @@ class DataFile:
                     next_test_batch = self.next_row[self.col_test_batch]
                 if item not in self.items:
                     self.item2id[item] = len(self.item2id)
-                user_items.append(item)
 
                 if (next_user != user) or self.next_row is None:
                     if not self.end_of_file:
