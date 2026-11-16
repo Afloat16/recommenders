@@ -204,6 +204,7 @@ pr_gate:
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_get_stop_words
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_recommend_top_k_items
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_get_top_k_recommendations
+    - tests/unit/recommenders/models/test_dense_model_topk_selection.py
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_get_top_k_recommendations_scalar_index
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_recommend_top_k_items_excludes_self_on_tied_similarity
     - tests/unit/recommenders/models/test_newsrec_model.py::test_dataset_reads_articles_into_rows
@@ -420,6 +421,7 @@ pr_gate:
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_get_cuda_and_cudnn_version_with_cuda
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_get_gpu_info
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_get_number_gpus
+    - tests/unit/recommenders/models/test_dense_model_topk_selection.py
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_clear_memory_all_gpus
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_get_cuda_version
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_get_cudnn_version

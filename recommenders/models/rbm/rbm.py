@@ -10,6 +10,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from recommenders.utils.python_utils import get_top_k_scored_items
+
 log = logging.getLogger(__name__)
 
 
@@ -620,7 +622,6 @@ class RBM(nn.Module):
 
         # start loop over training epochs
         for i in range(self.epochs):
-
             self.gibbs_protocol(i)  # Gibbs sampling update
             epoch_tr_err = self.batch_training(xtr_t)  # model train
 
@@ -746,19 +747,12 @@ class RBM(nn.Module):
             # also works on users that were not part of the train set.
             score = np.where(np.atleast_2d(np.asarray(x)) > 0, 0, score)
 
-        top_items = np.argpartition(-score, range(top_k), axis=1)[
-            :, :top_k
-        ]  # get the top k items
-
-        score_c = score.copy()  # get a copy of the score matrix
-
-        score_c[np.arange(score_c.shape[0])[:, None], top_items] = (
-            0  # set to zero the top_k elements
-        )
-
-        top_scores = score - score_c  # set to zeros all elements other then the top_k
-
-        return top_scores
+        if top_k > 0 and top_k >= score.shape[1]:
+            return score
+        top_items, top_scores = get_top_k_scored_items(score, top_k=top_k)
+        result = np.zeros_like(score)
+        np.put_along_axis(result, top_items, top_scores, axis=1)
+        return result
 
     def predict(self, x):
         """Returns the inferred ratings. This method is similar to recommend_k_items() with the

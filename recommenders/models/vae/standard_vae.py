@@ -13,6 +13,7 @@ from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from recommenders.evaluation.python_evaluation import ndcg_at_k
+from recommenders.utils.python_utils import get_top_k_scored_items
 
 
 class _VAEModel(nn.Module):
@@ -320,10 +321,12 @@ class StandardVAE:
         if remove_seen:
             seen_mask = np.not_equal(x, 0)
             score[seen_mask] = 0
-        top_items = np.argpartition(-score, range(k), axis=1)[:, :k]
-        score_c = score.copy()
-        score_c[np.arange(score_c.shape[0])[:, None], top_items] = 0
-        return score - score_c
+        if k > 0 and k >= score.shape[1]:
+            return score
+        top_items, top_scores = get_top_k_scored_items(score, top_k=k)
+        result = np.zeros_like(score)
+        np.put_along_axis(result, top_items, top_scores, axis=1)
+        return result
 
     def recommend_k_items(
         self, x: np.ndarray, k: int, remove_seen: bool = True
