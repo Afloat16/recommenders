@@ -275,6 +275,7 @@ pr_gate:
     - tests/unit/recommenders/utils/test_python_utils.py::test_get_top_k_scored_items_positive_k
     - tests/unit/recommenders/utils/test_python_utils.py::test_get_top_k_scored_items_empty_axes
     - tests/unit/recommenders/utils/test_python_utils.py::test_binarize
+    - tests/unit/recommenders/models/test_geoimc_topk.py
     - tests/unit/recommenders/utils/test_python_utils.py::test_rescale
     - tests/unit/recommenders/utils/test_timer.py::test_no_time
     - tests/unit/recommenders/utils/test_timer.py::test_stop_before_start
@@ -472,4 +473,5 @@ experimental:
     - tests/unit/recommenders/models/test_geoimc.py::test_imcproblem
     - tests/unit/recommenders/models/test_geoimc.py::test_inferer_init
     - tests/unit/recommenders/models/test_geoimc.py::test_inferer_infer
+    - tests/unit/recommenders/models/test_geoimc_topk.py
     - tests/unit/examples/test_notebooks_python.py::test_rlrmc_quickstart_runs
