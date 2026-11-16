@@ -1,0 +1,57 @@
+name: Validate LightFM ID mappings
+on:
+  push:
+    branches:
+      - validation/recommenders-lightfm-mapping-20261116
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: '3.10'
+            numpy-version: '1.24.4'
+            scipy-version: '1.10.1'
+          - python-version: '3.11'
+            numpy-version: '1.26.4'
+            scipy-version: '1.13.1'
+    env:
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 3
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install compatible dependencies
+        run: python -m pip install -e '.[dev]' numpy==${{ matrix.numpy-version }} scipy==${{ matrix.scipy-version }} Cython==0.29.37 wheel
+      - name: Build unmodified official LightFM 1.17 with its Cython command
+        env:
+          CC: gcc
+          CXX: g++
+          LIGHTFM_NO_CFLAGS: '1'
+        run: |
+          git clone --depth 1 --branch 1.17 https://github.com/lyst/lightfm.git /tmp/lightfm-1.17
+          test "$(git -C /tmp/lightfm-1.17 rev-parse HEAD)" = 688feded0717f289933b95a0134bad6fbe547331
+          cd /tmp/lightfm-1.17
+          python setup.py cythonize bdist_wheel
+          python -m pip install --no-deps --force-reinstall dist/*.whl
+          cd "$GITHUB_WORKSPACE"
+          python -c "from lightfm.data import Dataset; import lightfm; print(lightfm.__file__)"
+      - name: Verify baseline and exact contribution head
+        run: python .validation/validate_lightfm_mapping.py
+      - name: Record dependency versions
+        run: python -m pip freeze > .validation/results/dependencies.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lightfm-mapping-python-${{ matrix.python-version }}
+          path: .validation/results
