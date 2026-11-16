@@ -280,6 +280,7 @@ pr_gate:
     - tests/unit/recommenders/utils/test_timer.py::test_stop_before_start
     - tests/unit/recommenders/utils/test_timer.py::test_interval_before_stop
     - tests/unit/recommenders/utils/test_timer.py::test_timer
+    - tests/unit/recommenders/models/test_lightgcn_evaluation_columns.py
     - tests/unit/recommenders/utils/test_timer.py::test_timer_format
     - tests/performance/recommenders/evaluation/test_python_evaluation_time_performance.py::test_merge_rating
     - tests/performance/recommenders/evaluation/test_python_evaluation_time_performance.py::test_merge_ranking
@@ -441,6 +442,7 @@ pr_gate:
     - tests/unit/recommenders/models/test_deeprec_model.py::test_lightgcn_component_definition
     - tests/unit/recommenders/models/test_deeprec_utils.py::test_prepare_hparams
     - tests/unit/recommenders/models/test_deeprec_utils.py::test_load_yaml_file
+    - tests/unit/recommenders/models/test_lightgcn_evaluation_columns.py
     - tests/security/test_dependency_security.py::test_tensorflow
     - tests/security/test_dependency_security.py::test_torch
     - tests/regression/test_compatibility_tf.py

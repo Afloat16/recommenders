@@ -393,16 +393,24 @@ class LightGCN(nn.Module):
         _validate_metrics(metrics)
 
         topk_scores = self.recommend_k_items(self.data.test, top_k=top_k, use_id=True)
+        columns = {
+            "col_user": self.data.col_user,
+            "col_item": self.data.col_item,
+            "col_rating": self.data.col_rating,
+            "col_prediction": self.data.col_prediction,
+        }
         ret = []
         for metric in metrics:
             if metric == "map":
-                ret.append(map_at_k(self.data.test, topk_scores, k=top_k))
+                ret.append(map_at_k(self.data.test, topk_scores, k=top_k, **columns))
             elif metric == "ndcg":
-                ret.append(ndcg_at_k(self.data.test, topk_scores, k=top_k))
+                ret.append(ndcg_at_k(self.data.test, topk_scores, k=top_k, **columns))
             elif metric == "precision":
-                ret.append(precision_at_k(self.data.test, topk_scores, k=top_k))
+                ret.append(
+                    precision_at_k(self.data.test, topk_scores, k=top_k, **columns)
+                )
             elif metric == "recall":
-                ret.append(recall_at_k(self.data.test, topk_scores, k=top_k))
+                ret.append(recall_at_k(self.data.test, topk_scores, k=top_k, **columns))
         return ret
 
     def score(self, user_ids: np.ndarray, remove_seen: bool = True) -> np.ndarray:
