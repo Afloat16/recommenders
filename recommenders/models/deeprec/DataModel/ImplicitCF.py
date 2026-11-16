@@ -84,7 +84,6 @@ class ImplicitCF(object):
             user_idx = df[[self.col_user]].drop_duplicates().reindex()
             user_idx[self.col_user + "_idx"] = np.arange(len(user_idx))
             self.n_users = len(user_idx)
-            self.n_users_in_train = train[self.col_user].nunique()
             self.user_idx = user_idx
 
             self.user2id = dict(
@@ -146,6 +145,7 @@ class ImplicitCF(object):
             .reset_index()
             .rename(columns={self.col_item: self.col_item + "_interacted"})
         )
+        self.n_users_in_train = len(self.interact_status)
         self.R = sp.dok_matrix((self.n_users, self.n_items), dtype=np.float32)
         self.R[self.train[self.col_user], self.train[self.col_item]] = 1.0
 
@@ -217,13 +217,16 @@ class ImplicitCF(object):
                 if neg_id not in x:
                     return neg_id
 
+        if self.n_users_in_train == 0:
+            raise ValueError("No users with positive interactions available for training.")
         indices = range(self.n_users_in_train)
-        if self.n_users < batch_size:
-            users = [random.choice(indices) for _ in range(batch_size)]
+        if self.n_users_in_train < batch_size:
+            positions = [random.choice(indices) for _ in range(batch_size)]
         else:
-            users = random.sample(indices, batch_size)
+            positions = random.sample(indices, batch_size)
 
-        interact = self.interact_status.iloc[users]
+        interact = self.interact_status.iloc[positions]
+        users = interact[self.col_user].to_numpy()
         pos_items = interact[self.col_item + "_interacted"].apply(
             lambda x: random.choice(list(x))
         )
