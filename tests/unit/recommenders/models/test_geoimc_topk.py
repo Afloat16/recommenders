@@ -9,7 +9,7 @@ from recommenders.models.geoimc.geoimc_data import DataPtr
 from recommenders.models.geoimc.geoimc_predict import Inferer
 
 
-@pytest.mark.parametrize("k", [0, 1, 3, 10])
+@pytest.mark.parametrize("k", [1, 3, 10])
 @pytest.mark.parametrize("dtype", [np.float32, np.float64, np.int64])
 def test_topk_selects_at_most_available_items(k, dtype):
     users = np.array([[1, 0], [0, 1]], dtype=dtype)
@@ -19,7 +19,6 @@ def test_topk_selects_at_most_available_items(k, dtype):
     result = Inferer(k=k, transformation="topk").infer([users, items], W=None)
 
     expected_by_k = {
-        0: [[0, 0, 0], [0, 0, 0]],
         1: [[1, 0, 0], [0, 1, 0]],
         3: [[1, 1, 1], [1, 1, 1]],
         10: [[1, 1, 1], [1, 1, 1]],
@@ -31,7 +30,7 @@ def test_topk_selects_at_most_available_items(k, dtype):
 
 
 @pytest.mark.parametrize("shape", [(0, 3), (2, 0), (0, 0)])
-@pytest.mark.parametrize("k", [0, 10])
+@pytest.mark.parametrize("k", [1, 10])
 def test_topk_empty_catalogs_preserve_output_shape(shape, k):
     users = np.empty((shape[0], 2))
     items = np.empty((shape[1], 2))
@@ -42,7 +41,7 @@ def test_topk_empty_catalogs_preserve_output_shape(shape, k):
     assert result.size == 0
 
 
-@pytest.mark.parametrize("k", [0, 1, 10])
+@pytest.mark.parametrize("k", [1, 10])
 def test_topk_with_real_data_pointer(k):
     users = np.array([[1.0, 0.0], [0.0, 1.0]])
     items = np.array([[3.0, -4.0], [1.0, 7.0], [-2.0, 2.0]])
@@ -53,19 +52,14 @@ def test_topk_with_real_data_pointer(k):
         data, W=[identity, identity, identity]
     )
 
-    expected = (
-        [[0, 0, 0], [0, 0, 0]]
-        if k == 0
-        else [[1, 0, 0], [0, 1, 0]]
-        if k == 1
-        else [[1, 1, 1], [1, 1, 1]]
-    )
+    expected = [[1, 0, 0], [0, 1, 0]] if k == 1 else [[1, 1, 1], [1, 1, 1]]
     np.testing.assert_array_equal(result, expected)
 
 
-def test_topk_rejects_negative_count():
-    with pytest.raises(ValueError, match="nonnegative"):
-        Inferer(k=-1, transformation="topk").infer(
+@pytest.mark.parametrize("k", [0, -1])
+def test_topk_rejects_nonpositive_count(k):
+    with pytest.raises(ValueError, match="at least 1"):
+        Inferer(k=k, transformation="topk").infer(
             [np.ones((2, 2)), np.ones((3, 2))], W=None
         )
 

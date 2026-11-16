@@ -39,8 +39,8 @@ class Inferer:
         Args:
             method (str): The inference method. Currently 'dot'
                 (Dot product) is supported.
-            k (uint): Nonnegative number of items for 'topk' transformation,
-                capped at the number of available items. Zero selects no items.
+            k (uint): Positive number of items for 'topk' transformation,
+                capped at the number of available items. Must be at least 1.
             transformation (str): Transform the inferred values into a
                 different scale. Currently 'mean' (Binarize the values
                 using mean of inferred matrix as the threshold), 'topk'
@@ -87,8 +87,8 @@ class Inferer:
         if self.transformation == "mean":
             prediction = conv_binary(sim_score, sim_score.mean())
         elif self.transformation == "topk":
-            if self.k < 0:
-                raise ValueError("k must be nonnegative")
+            if self.k < 1:
+                raise ValueError(f"k must be at least 1, got {self.k}")
             k = min(self.k, sim_score.shape[1])
             prediction = np.zeros_like(sim_score)
             if k:
