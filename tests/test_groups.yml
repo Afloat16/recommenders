@@ -69,6 +69,7 @@ nightly:
     - tests/unit/recommenders/models/test_embdotbias_utils.py
     - tests/smoke/examples/test_notebooks_gpu.py::test_embdotbias_smoke
     - tests/functional/examples/test_notebooks_gpu.py::test_embdotbias_functional
+    - tests/unit/recommenders/models/test_embdotbias_score_roles.py
 
   group_gpu_003:
     - tests/unit/examples/test_notebooks_gpu.py::test_gpu_vm  # Always the first test to check the GPU works
@@ -401,6 +402,7 @@ pr_gate:
     - tests/unit/recommenders/models/test_wide_deep_utils.py::test_wide_model
     - tests/unit/recommenders/models/test_wide_deep_utils.py::test_deep_model
     - tests/unit/recommenders/models/test_wide_deep_utils.py::test_wide_deep_model
+    - tests/unit/recommenders/models/test_embdotbias_score_roles.py
     - tests/unit/recommenders/models/test_newsrec_model.py::test_additive_attention_leaves_out_masked_positions
     - tests/unit/recommenders/models/test_newsrec_model.py::test_self_attention_matches_the_formula
     - tests/unit/recommenders/models/test_newsrec_model.py::test_forward_scores_every_candidate

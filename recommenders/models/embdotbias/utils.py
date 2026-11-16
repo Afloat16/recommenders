@@ -49,7 +49,11 @@ def score(
         pandas.DataFrame: Result of recommendation
     """
     # replace values not known to the model with NaN
-    total_users, total_items = model.classes.values()
+    if hasattr(model, "user") and hasattr(model, "item"):
+        total_users = model.classes[model.user]
+        total_items = model.classes[model.item]
+    else:
+        total_users, total_items = model.classes.values()
     test_df.loc[~test_df[user_col].isin(total_users), user_col] = np.nan
     test_df.loc[~test_df[item_col].isin(total_items), item_col] = np.nan
 
