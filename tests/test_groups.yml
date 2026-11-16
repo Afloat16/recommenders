@@ -231,6 +231,7 @@ pr_gate:
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_dataset_with_duplicates
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_get_topk_most_similar_users
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_item_frequencies
+    - tests/unit/recommenders/models/test_sar_population_counts.py::test_sar_counts_are_not_limited_by_rating_dtype
     - tests/unit/recommenders/models/test_sar_singlenode.py::test_user_frequencies
     # - tests/unit/recommenders/models/test_surprise_utils.py::test_predict  # Put back in core deps when #2224 is fixed
     # - tests/unit/recommenders/models/test_surprise_utils.py::test_recommend_k_items  # Put back in core deps when #2224 is fixed
