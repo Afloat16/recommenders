@@ -1,0 +1,43 @@
+name: Validate FFM per-instance field boundaries
+on:
+  push:
+    branches:
+      - validation/recommenders-ffm-fields-20261116
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: '3.10'
+            torch-version: '2.0.1'
+          - python-version: '3.11'
+            torch-version: '2.5.1'
+    env:
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 3
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install supported CPU Torch and repository requirements
+        run: |
+          python -m pip install torch==${{ matrix.torch-version }} --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -e '.[dev]'
+      - name: Verify original behavior and exact contribution head
+        run: python .validation/validate_ffm_fields.py
+      - name: Record dependency versions
+        run: python -m pip freeze > .validation/results/dependencies.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ffm-fields-python-${{ matrix.python-version }}-torch-${{ matrix.torch-version }}
+          path: .validation/results
