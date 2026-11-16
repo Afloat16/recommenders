@@ -353,14 +353,13 @@ class SARSingleNode:
 
         if self.normalize:
             counts = self.unity_user_affinity[user_ids, :].dot(self.item_similarity)
-            user_min_scores = (
-                np.tile(counts.min(axis=1)[:, np.newaxis], test_scores.shape[1])
-                * self.rating_min
-            )
-            user_max_scores = (
-                np.tile(counts.max(axis=1)[:, np.newaxis], test_scores.shape[1])
-                * self.rating_max
-            )
+            min_counts = counts.min(axis=1)
+            max_counts = counts.max(axis=1)
+            if sparse.issparse(counts):
+                min_counts = min_counts.toarray().ravel()
+                max_counts = max_counts.toarray().ravel()
+            user_min_scores = min_counts[:, np.newaxis] * self.rating_min
+            user_max_scores = max_counts[:, np.newaxis] * self.rating_max
             test_scores = rescale(
                 test_scores,
                 self.rating_min,
