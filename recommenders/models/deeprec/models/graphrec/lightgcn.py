@@ -89,9 +89,11 @@ class LightGCN(nn.Module):
         nn.init.xavier_uniform_(self.item_embedding.weight)
         logger.info("Using xavier initialization.")
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.A_hat = self._convert_sp_mat_to_sp_tensor(norm_adj).to(self.device)
-        self.to(self.device)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.register_buffer(
+            "A_hat", self._convert_sp_mat_to_sp_tensor(norm_adj), persistent=False
+        )
+        self.to(device=device, dtype=self.user_embedding.weight.dtype)
 
         # Populated by fit(); inference methods (score / recommend_k_items /
         # run_eval / infer_embedding) read these.
@@ -99,6 +101,11 @@ class LightGCN(nn.Module):
         self.batch_size: int = 1024
         self.decay: float = 0.0
         self.optimizer: torch.optim.Optimizer | None = None
+
+    @property
+    def device(self) -> torch.device:
+        """Current embedding device, including explicit module moves."""
+        return self.user_embedding.weight.device
 
     @property
     def ua_embeddings(self) -> torch.Tensor:

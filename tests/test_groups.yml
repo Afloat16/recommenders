@@ -279,6 +279,7 @@ pr_gate:
     - tests/unit/recommenders/utils/test_timer.py::test_no_time
     - tests/unit/recommenders/utils/test_timer.py::test_stop_before_start
     - tests/unit/recommenders/utils/test_timer.py::test_interval_before_stop
+    - tests/unit/recommenders/models/test_lightgcn_model_movement.py
     - tests/unit/recommenders/utils/test_timer.py::test_timer
     - tests/unit/recommenders/utils/test_timer.py::test_timer_format
     - tests/performance/recommenders/evaluation/test_python_evaluation_time_performance.py::test_merge_rating
@@ -440,6 +441,7 @@ pr_gate:
     # - tests/unit/recommenders/models/test_deeprec_model.py::test_sum_component_definition  # FIXME: Disabled due to the issue with TF version > 2.10.1 See #2018
     - tests/unit/recommenders/models/test_deeprec_model.py::test_lightgcn_component_definition
     - tests/unit/recommenders/models/test_deeprec_utils.py::test_prepare_hparams
+    - tests/unit/recommenders/models/test_lightgcn_model_movement.py
     - tests/unit/recommenders/models/test_deeprec_utils.py::test_load_yaml_file
     - tests/security/test_dependency_security.py::test_tensorflow
     - tests/security/test_dependency_security.py::test_torch
