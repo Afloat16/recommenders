@@ -171,6 +171,7 @@ pr_gate:
     - tests/unit/recommenders/evaluation/test_python_evaluation.py::test_python_mae
     - tests/unit/recommenders/evaluation/test_python_evaluation.py::test_python_rsquared
     - tests/unit/recommenders/evaluation/test_python_evaluation.py::test_python_exp_var
+    - tests/unit/recommenders/evaluation/test_ndcg_exponential_dtypes.py::test_exponential_ndcg_does_not_overflow_rating_dtype
     - tests/unit/recommenders/evaluation/test_python_evaluation.py::test_get_top_k_items
     - tests/unit/recommenders/evaluation/test_python_evaluation.py::test_get_top_k_items_largek
     - tests/unit/recommenders/evaluation/test_python_evaluation.py::test_python_ndcg_at_k
