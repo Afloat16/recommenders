@@ -43,7 +43,9 @@ jobs:
           test "$(git -C /tmp/lightfm-1.17 rev-parse HEAD)" = 688feded0717f289933b95a0134bad6fbe547331
           cd /tmp/lightfm-1.17
           python setup.py cythonize bdist_wheel
-          python -m pip install --no-deps dist/*.whl
+          python -m pip install --no-deps --force-reinstall dist/*.whl
+          cd "$GITHUB_WORKSPACE"
+          python -c "from lightfm.data import Dataset; import lightfm; print(lightfm.__file__)"
       - name: Verify baseline and exact contribution head
         run: python .validation/validate_lightfm_similarity.py
       - name: Record dependency versions
