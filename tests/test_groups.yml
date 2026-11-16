@@ -152,6 +152,10 @@ pr_gate:
     - tests/unit/recommenders/datasets/test_pandas_df_utils.py::test_has_columns
     - tests/unit/recommenders/datasets/test_pandas_df_utils.py::test_has_same_base_dtype
     - tests/unit/recommenders/datasets/test_pandas_df_utils.py::test_lru_cache_df
+    - tests/unit/recommenders/datasets/test_dataframe_cache_identity.py::test_cached_dataframe_result_respects_row_labels
+    - tests/unit/recommenders/datasets/test_dataframe_cache_identity.py::test_cached_dataframe_result_respects_dtypes_with_identical_bytes
+    - tests/unit/recommenders/datasets/test_dataframe_cache_identity.py::test_cached_dataframe_result_checks_values_on_hash_collisions
+    - tests/unit/recommenders/datasets/test_dataframe_cache_identity.py::test_pandas_hash_equality_with_other_types
     - tests/unit/recommenders/datasets/test_python_splitter.py::test_split_pandas_data
     - tests/unit/recommenders/datasets/test_python_splitter.py::test_min_rating_filter
     - tests/unit/recommenders/datasets/test_python_splitter.py::test_filter_k_core_custom_columns
