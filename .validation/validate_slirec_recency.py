@@ -61,6 +61,6 @@ subprocess.run([sys.executable, "-m", "black", "--check", TEST, SOURCE], check=T
 subprocess.run(["git", "diff", "--check"], check=True)
 for path in [TEST, SOURCE]:
     restore(BASE, path)
-subprocess.run(["git", "diff", "--exit-code", "--", TEST, SOURCE], check=True)
+subprocess.run(["git", "diff", "--exit-code", BASE, "--", TEST, SOURCE], check=True)
 (OUT / "summary.json").write_text(json.dumps({"base":BASE,"head":HEAD,"results":results},indent=2)+"\n")
 print("Baseline, seven expected failures, exact improvement and formatting verified.", flush=True)
