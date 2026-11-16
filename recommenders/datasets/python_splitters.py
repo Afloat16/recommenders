@@ -85,11 +85,11 @@ def _do_stratification(
         )
 
     if is_random:
-        np.random.seed(seed)
+        rng = np.random.RandomState(seed)
         order = pd.DataFrame(
             {
                 "group": data[split_by_column].array,
-                "random": np.random.rand(data.shape[0]),
+                "random": rng.rand(data.shape[0]),
             }
         )
         data = data.iloc[order.sort_values(["group", "random"]).index]
@@ -171,6 +171,7 @@ def python_stratified_split(
 
     For each user / item, the split function takes proportions of ratings which is
     specified by the split ratio(s). The split is stratified.
+    Sampling uses a local random state without changing NumPy's global random state.
 
     Args:
         data (pandas.DataFrame): Pandas DataFrame to be split.
@@ -233,6 +234,8 @@ def numpy_stratified_split(X, ratio=0.75, seed=42):
     sample of local size ratio (point 1) and erase the remaining ratings, obtaining in this way the
     train set matrix Xtst. The train set matrix is obtained in the opposite way.
 
+    Sampling uses a local random state without changing NumPy's global random state.
+
     Args:
         X (numpy.ndarray, int): a sparse matrix to be split
         ratio (float): fraction of the entire dataset to constitute the train set
@@ -244,7 +247,7 @@ def numpy_stratified_split(X, ratio=0.75, seed=42):
         - Xtst: The test set user/item affinity matrix.
     """
 
-    np.random.seed(seed)  # set the random seed
+    rng = np.random.RandomState(seed)
     test_cut = int((1 - ratio) * 100)  # percentage of ratings to go in the test set
 
     # initialize train and test set matrices
@@ -262,7 +265,7 @@ def numpy_stratified_split(X, ratio=0.75, seed=42):
         idx = np.asarray(np.where(Xtr[u] != 0))[0].tolist()
 
         # extract a random subset of size n from the set of rated movies without repetition
-        idx_tst = np.random.choice(idx, tst[u], replace=False)
+        idx_tst = rng.choice(idx, tst[u], replace=False)
         idx_train = list(set(idx).difference(set(idx_tst)))
 
         # change the selected rated movies to unrated in the train set
