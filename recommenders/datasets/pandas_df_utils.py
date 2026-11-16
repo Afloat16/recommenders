@@ -430,13 +430,17 @@ class PandasHash:
         """Overwrite equality comparison
 
         Args:
-            other (pandas.DataFrame|pandas.Series): pandas object to compare
+            other (PandasHash): wrapped pandas object to compare
 
         Returns:
             bool: whether other object is the same as this one
         """
 
-        return hash(self) == hash(other)
+        if not isinstance(other, PandasHash):
+            return NotImplemented
+        return hash(self) == hash(other) and self.pandas_object.equals(
+            other.pandas_object
+        )
 
     def __hash__(self):
         """Overwrite hash operator for use with pandas objects
