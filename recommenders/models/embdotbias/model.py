@@ -113,11 +113,11 @@ class EmbeddingDotBias(Module):
             is_item (bool): If True, fetch item bias; else user bias.
 
         Returns:
-            torch.Tensor: Bias values for the given entities.
+            torch.Tensor: Detached CPU bias values for the given entities.
         """
         idx = self._get_idx(entity_ids, is_item)
-        layer = (self.i_bias if is_item else self.u_bias).eval().cpu()
-        return layer(idx).squeeze().detach()
+        layer = self.i_bias if is_item else self.u_bias
+        return layer(idx.to(layer.weight.device)).squeeze().detach().cpu()
 
     def weight(self, entity_ids, is_item=True):
         """
@@ -128,8 +128,8 @@ class EmbeddingDotBias(Module):
             is_item (bool): If True, fetch item weights; else user weights.
 
         Returns:
-            torch.Tensor: Embedding weights for the given entities.
+            torch.Tensor: Detached CPU embedding weights for the given entities.
         """
         idx = self._get_idx(entity_ids, is_item)
-        layer = (self.i_weight if is_item else self.u_weight).eval().cpu()
-        return layer(idx).detach()
+        layer = self.i_weight if is_item else self.u_weight
+        return layer(idx.to(layer.weight.device)).detach().cpu()

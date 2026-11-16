@@ -66,6 +66,7 @@ nightly:
     - tests/functional/examples/test_notebooks_gpu.py::test_cornac_bivae_functional
     - tests/smoke/examples/test_notebooks_gpu.py::test_wide_deep_smoke
     - tests/unit/recommenders/models/test_embdotbias_model.py
+    - tests/unit/recommenders/models/test_embdotbias_inspection.py
     - tests/unit/recommenders/models/test_embdotbias_utils.py
     - tests/smoke/examples/test_notebooks_gpu.py::test_embdotbias_smoke
     - tests/functional/examples/test_notebooks_gpu.py::test_embdotbias_functional
@@ -375,6 +376,7 @@ pr_gate:
   group_gpu:
   # group_gpu_001:
     - tests/unit/examples/test_notebooks_gpu.py::test_gpu_vm  # Always the first test to check the GPU works
+    - tests/unit/recommenders/models/test_embdotbias_inspection.py::test_embedding_inspection_preserves_model_state
     - tests/unit/recommenders/models/test_rbm.py::test_class_init
     - tests/unit/recommenders/models/test_rbm.py::test_to_one_hot
     - tests/unit/recommenders/models/test_rbm.py::test_sampling_funct
