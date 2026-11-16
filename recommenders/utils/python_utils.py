@@ -243,6 +243,7 @@ def rescale(data, new_min=0, new_max=1, data_min=None, data_max=None):
     Note:
         This is same as the `scipy.MinMaxScaler` with the exception that we can override
         the min/max of the old scale.
+        Constant input ranges map their constant value to `new_min`.
 
     Args:
         data (numpy.ndarray): 1d scores vector or 2d score matrix (users x items).
@@ -256,4 +257,6 @@ def rescale(data, new_min=0, new_max=1, data_min=None, data_max=None):
     """
     data_min = data.min() if data_min is None else data_min
     data_max = data.max() if data_max is None else data_max
-    return (data - data_min) / (data_max - data_min) * (new_max - new_min) + new_min
+    data_range = data_max - data_min
+    data_range = np.where(data_range == 0, np.ones_like(data_range), data_range)
+    return (data - data_min) / data_range * (new_max - new_min) + new_min
