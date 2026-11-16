@@ -202,7 +202,11 @@ class SARSingleNode:
             item_cooccurrence >= self.threshold
         )
 
-        return item_cooccurrence.astype(df[self.col_rating].dtype)
+        rating_dtype = df[self.col_rating].dtype
+        if np.issubdtype(rating_dtype, np.integer):
+            # Population counts can exceed the range used to store ratings.
+            return item_cooccurrence
+        return item_cooccurrence.astype(rating_dtype)
 
     def set_index(self, df):
         """Generate continuous indices for users and items to reduce memory usage.
