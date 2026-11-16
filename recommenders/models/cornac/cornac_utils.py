@@ -34,14 +34,14 @@ def predict(
     iid_map = model.train_set.iid_map
     predictions = [
         [
-            getattr(row, usercol),
-            getattr(row, itemcol),
+            user,
+            item,
             model.rate(
-                user_idx=uid_map.get(getattr(row, usercol), len(uid_map)),
-                item_idx=iid_map.get(getattr(row, itemcol), len(iid_map)),
+                user_idx=uid_map.get(user, len(uid_map)),
+                item_idx=iid_map.get(item, len(iid_map)),
             ),
         ]
-        for row in data.itertuples()
+        for user, item in data[[usercol, itemcol]].itertuples(index=False, name=None)
     ]
     predictions = pd.DataFrame(data=predictions, columns=[usercol, itemcol, predcol])
     return predictions

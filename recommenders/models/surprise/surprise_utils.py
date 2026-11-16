@@ -62,15 +62,14 @@ def predict(
     Returns:
         pandas.DataFrame: Dataframe with usercol, itemcol, predcol
     """
-    predictions = [
-        algo.predict(getattr(row, usercol), getattr(row, itemcol))
-        for row in data.itertuples()
-    ]
-    predictions = pd.DataFrame(predictions)
-    predictions = predictions.rename(
-        index=str, columns={"uid": usercol, "iid": itemcol, "est": predcol}
+    predictions = (
+        algo.predict(user, item)
+        for user, item in data[[usercol, itemcol]].itertuples(index=False, name=None)
     )
-    return predictions.drop(["details", "r_ui"], axis="columns")
+    return pd.DataFrame(
+        ((prediction.uid, prediction.iid, prediction.est) for prediction in predictions),
+        columns=[usercol, itemcol, predcol],
+    ).rename(index=str)
 
 
 def compute_ranking_predictions(
