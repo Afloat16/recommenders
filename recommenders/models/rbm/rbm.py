@@ -620,7 +620,6 @@ class RBM(nn.Module):
 
         # start loop over training epochs
         for i in range(self.epochs):
-
             self.gibbs_protocol(i)  # Gibbs sampling update
             epoch_tr_err = self.batch_training(xtr_t)  # model train
 
@@ -684,15 +683,17 @@ class RBM(nn.Module):
 
         return self.expected_rating(pvh), pvh
 
-    def _infer(self, x, batch_size=1000):
+    def _infer(self, x, batch_size=1000, return_distributions=True):
         """Run :meth:`eval_out` over the users in chunks.
 
         Args:
             x (numpy.ndarray): (m, n_visible) input user/affinity matrix.
             batch_size (int): number of users evaluated at a time.
+            return_distributions (bool): whether to collect the rating distributions.
 
         Returns:
-            numpy.ndarray, numpy.ndarray: the expected ratings and their distributions.
+            numpy.ndarray, numpy.ndarray or None: the expected ratings and their
+                distributions, or None when distributions are not requested.
         """
 
         x = np.atleast_2d(np.asarray(x))
@@ -707,9 +708,13 @@ class RBM(nn.Module):
                 )
                 v_, pvh_ = self.eval_out(chunk)
                 v_chunks.append(v_.cpu().numpy())
-                p_chunks.append(pvh_.cpu().numpy())
+                if return_distributions:
+                    p_chunks.append(pvh_.cpu().numpy())
+                del pvh_
 
-        return np.concatenate(v_chunks, axis=0), np.concatenate(p_chunks, axis=0)
+        return np.concatenate(v_chunks, axis=0), (
+            np.concatenate(p_chunks, axis=0) if return_distributions else None
+        )
 
     def recommend_k_items(self, x, top_k=10, remove_seen=True):
         """Returns the top-k items ordered by a relevancy score.
@@ -736,7 +741,7 @@ class RBM(nn.Module):
             - A sparse matrix containing the top_k elements ordered by their score.
         """
 
-        score, _ = self._infer(x)
+        score, _ = self._infer(x, return_distributions=False)
 
         log.info("Extracting top %i elements" % top_k)
 
@@ -782,7 +787,7 @@ class RBM(nn.Module):
             - A matrix with the inferred ratings.
         """
 
-        v_, _ = self._infer(x)
+        v_, _ = self._infer(x, return_distributions=False)
 
         return v_
 
