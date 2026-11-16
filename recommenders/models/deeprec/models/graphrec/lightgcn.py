@@ -419,6 +419,8 @@ class LightGCN(nn.Module):
             raise RuntimeError(
                 "score() requires a dataset. Call fit() first or assign self.data."
             )
+        if len(user_ids) == 0:
+            return self.user_embedding.weight.new_empty((0, self.n_items)).cpu().numpy()
         if any(np.isnan(user_ids)):
             raise ValueError(
                 "LightGCN cannot score users that are not in the training set"

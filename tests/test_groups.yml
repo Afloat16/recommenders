@@ -278,6 +278,7 @@ pr_gate:
     - tests/unit/recommenders/utils/test_python_utils.py::test_rescale
     - tests/unit/recommenders/utils/test_timer.py::test_no_time
     - tests/unit/recommenders/utils/test_timer.py::test_stop_before_start
+    - tests/unit/recommenders/models/test_lightgcn_empty_batches.py
     - tests/unit/recommenders/utils/test_timer.py::test_interval_before_stop
     - tests/unit/recommenders/utils/test_timer.py::test_timer
     - tests/unit/recommenders/utils/test_timer.py::test_timer_format
@@ -442,6 +443,7 @@ pr_gate:
     - tests/unit/recommenders/models/test_deeprec_utils.py::test_prepare_hparams
     - tests/unit/recommenders/models/test_deeprec_utils.py::test_load_yaml_file
     - tests/security/test_dependency_security.py::test_tensorflow
+    - tests/unit/recommenders/models/test_lightgcn_empty_batches.py
     - tests/security/test_dependency_security.py::test_torch
     - tests/regression/test_compatibility_tf.py
 
