@@ -278,6 +278,7 @@ pr_gate:
     - tests/unit/recommenders/utils/test_python_utils.py::test_rescale
     - tests/unit/recommenders/utils/test_timer.py::test_no_time
     - tests/unit/recommenders/utils/test_timer.py::test_stop_before_start
+    - tests/unit/recommenders/models/test_geoimc_item_features.py
     - tests/unit/recommenders/utils/test_timer.py::test_interval_before_stop
     - tests/unit/recommenders/utils/test_timer.py::test_timer
     - tests/unit/recommenders/utils/test_timer.py::test_timer_format
@@ -469,6 +470,7 @@ experimental:
     - tests/unit/recommenders/models/test_geoimc.py::test_length_normalize
     - tests/unit/recommenders/models/test_geoimc.py::test_mean_center
     - tests/unit/recommenders/models/test_geoimc.py::test_reduce_dims
+    - tests/unit/recommenders/models/test_geoimc_item_features.py
     - tests/unit/recommenders/models/test_geoimc.py::test_imcproblem
     - tests/unit/recommenders/models/test_geoimc.py::test_inferer_init
     - tests/unit/recommenders/models/test_geoimc.py::test_inferer_infer

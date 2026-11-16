@@ -260,11 +260,11 @@ class ML_100K(Dataset):
             [
                 pd.get_dummies(data["movie_title"]),
                 pd.get_dummies(data["release_date"]),
-                pd.get_dummies("video_release_date"),
-                pd.get_dummies("IMDb_URL"),
+                pd.get_dummies(data["video_release_date"]),
+                pd.get_dummies(data["IMDb_URL"]),
                 data[header[5:]],
             ],
             axis=1,
         )
-        item_features = np.nan_to_num(features_df.to_numpy())
+        item_features = np.nan_to_num(features_df.to_numpy(dtype=float))
         return item_features
