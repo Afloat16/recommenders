@@ -202,6 +202,7 @@ pr_gate:
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_tokenize_text
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_get_tokens
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_get_stop_words
+    - tests/unit/recommenders/models/test_vae_zero_score_checkpoint.py
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_recommend_top_k_items
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_get_top_k_recommendations
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_get_top_k_recommendations_scalar_index
@@ -423,6 +424,7 @@ pr_gate:
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_clear_memory_all_gpus
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_get_cuda_version
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_get_cudnn_version
+    - tests/unit/recommenders/models/test_vae_zero_score_checkpoint.py
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_cudnn_enabled
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_tensorflow_gpu
     - tests/unit/recommenders/utils/test_gpu_utils.py::test_pytorch_gpu

@@ -246,7 +246,7 @@ class MultVAE:
         self.val_ndcg: List[float] = []
         self.ls_beta: List[float] = []
 
-        best_ndcg = 0.0
+        best_ndcg = -np.inf
         update_count = 0
 
         for epoch in range(self.n_epochs):
