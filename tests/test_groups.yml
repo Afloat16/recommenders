@@ -158,6 +158,9 @@ pr_gate:
     - tests/unit/recommenders/datasets/test_python_splitter.py::test_random_splitter
     - tests/unit/recommenders/datasets/test_python_splitter.py::test_chrono_splitter
     - tests/unit/recommenders/datasets/test_python_splitter.py::test_stratified_splitter
+    - tests/unit/recommenders/datasets/test_split_random_state.py::test_stratified_split_preserves_global_random_state
+    - tests/unit/recommenders/datasets/test_split_random_state.py::test_python_stratified_split_preserves_seeded_partitions
+    - tests/unit/recommenders/datasets/test_split_random_state.py::test_numpy_stratified_split_preserves_seeded_partitions
     - tests/unit/recommenders/datasets/test_python_splitter.py::test_int_numpy_stratified_splitter
     - tests/unit/recommenders/datasets/test_python_splitter.py::test_float_numpy_stratified_splitter
     - tests/unit/recommenders/datasets/test_split_columns.py::test_stratified_split_preserves_all_input_columns
