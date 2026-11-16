@@ -198,6 +198,7 @@ pr_gate:
     - tests/unit/recommenders/evaluation/test_python_evaluation.py::test_serendipity_item_feature_vector
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_init
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_clean_dataframe
+    - tests/unit/recommenders/models/test_lightgcn_empty_batches.py
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_fit
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_tokenize_text
     - tests/unit/recommenders/models/test_tfidf_utils.py::test_get_tokens
@@ -278,7 +279,6 @@ pr_gate:
     - tests/unit/recommenders/utils/test_python_utils.py::test_rescale
     - tests/unit/recommenders/utils/test_timer.py::test_no_time
     - tests/unit/recommenders/utils/test_timer.py::test_stop_before_start
-    - tests/unit/recommenders/models/test_lightgcn_empty_batches.py
     - tests/unit/recommenders/utils/test_timer.py::test_interval_before_stop
     - tests/unit/recommenders/utils/test_timer.py::test_timer
     - tests/unit/recommenders/utils/test_timer.py::test_timer_format
